@@ -1,5 +1,6 @@
 package com.net0.restaurant.service.impl;
 
+import com.net0.restaurant.dto.RestaurantTableDto;
 import com.net0.restaurant.model.RestaurantTable;
 import com.net0.restaurant.repository.RestaurantTableRepository;
 import com.net0.restaurant.service.RestaurantTableService;
@@ -28,15 +29,16 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
     }
 
     @Override
-    public RestaurantTable createTable(RestaurantTable table) {
+    public RestaurantTable createTable(RestaurantTableDto tableDto) {
+        RestaurantTable table = dtoToTable(tableDto);
         return restaurantTableRepository.save(table);
     }
 
     @Override
-    public RestaurantTable updateTable(Long id, RestaurantTable table) {
+    public RestaurantTable updateTable(Long id, RestaurantTableDto tableDto) {
         RestaurantTable current = restaurantTableRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        RestaurantTable updatedTable = update(current, table);
+        RestaurantTable updatedTable = update(current, dtoToTable(tableDto));
 
         return restaurantTableRepository.save(updatedTable);
     }
@@ -44,6 +46,15 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
     @Override
     public void deleteTable(Long id) {
         restaurantTableRepository.deleteById(id);
+    }
+
+    private RestaurantTable dtoToTable(RestaurantTableDto dto) {
+        return RestaurantTable.builder()
+                .name(dto.getName())
+                .seats(dto.getSeats())
+                .area(dto.getArea())
+                .isReservable(dto.isReservable())
+                .build();
     }
 
     private RestaurantTable update(RestaurantTable current, RestaurantTable updated) {

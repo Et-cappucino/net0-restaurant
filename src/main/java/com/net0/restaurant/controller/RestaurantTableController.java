@@ -1,5 +1,6 @@
 package com.net0.restaurant.controller;
 
+import com.net0.restaurant.dto.RestaurantTableDto;
 import com.net0.restaurant.model.RestaurantTable;
 import com.net0.restaurant.service.RestaurantTableService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,8 +62,8 @@ public class RestaurantTableController {
                             schema = @Schema(implementation = RestaurantTable.class)) }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content) })
     @PostMapping
-    public ResponseEntity<RestaurantTable> addTable(@RequestBody RestaurantTable table) {
-        var body = restaurantTableService.createTable(table);
+    public ResponseEntity<RestaurantTable> addTable(@RequestBody RestaurantTableDto tableDto) {
+        var body = restaurantTableService.createTable(tableDto);
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
@@ -75,8 +76,8 @@ public class RestaurantTableController {
             @ApiResponse(responseCode = "404", description = "Table not found", content = @Content)})
     @PutMapping("/{id}")
     public ResponseEntity<RestaurantTable> editTableDetails(@PathVariable Long id,
-                                                            @RequestBody RestaurantTable table) {
-        var body = restaurantTableService.updateTable(id, table);
+                                                            @RequestBody RestaurantTableDto tableDto) {
+        var body = restaurantTableService.updateTable(id, tableDto);
         return ResponseEntity.ok(body);
     }
 
